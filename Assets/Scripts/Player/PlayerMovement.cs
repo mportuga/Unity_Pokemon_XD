@@ -3,7 +3,7 @@ using System.Collections;
 
 public class PlayerMovement : MonoBehaviour {
 
-    Direction currentDir;
+	Direction currentDir;
     Vector2 input;
     bool isMoving = false;
     Vector3 startPos;
@@ -18,44 +18,35 @@ public class PlayerMovement : MonoBehaviour {
     public float walkSpeed = 3f;
 
     public bool isAllowedToMove = true;
+	public string initialDir = Direction.South.ToString ();
 
-    void Start()
-    {
+    void Start() {
         isAllowedToMove = true;
     }
 
 	void Update () { 
-
-        if(!isMoving && isAllowedToMove)
-        {
+        if(!isMoving && isAllowedToMove) {
             input = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
             if (Mathf.Abs(input.x) > Mathf.Abs(input.y))
                 input.y = 0;
             else
                 input.x = 0;
 
-            if(input != Vector2.zero)
-            {
+            if(input != Vector2.zero) {
 
-                if(input.x < 0)
-                {
+                if(input.x < 0) {
                     currentDir = Direction.West;
-                }
-                if(input.x > 0)
-                {
+                } else if(input.x > 0) {
                     currentDir = Direction.East;
                 }
-                if(input.y < 0)
-                {
+
+                if(input.y < 0) {
                     currentDir = Direction.South;
-                }
-                if (input.y > 0)
-                {
+                } else if (input.y > 0) {
                     currentDir = Direction.North;
                 }
 
-                switch(currentDir)
-                {
+                switch(currentDir) {
                     case Direction.North:
                         gameObject.GetComponent<SpriteRenderer>().sprite = northSprite;
                         break;
@@ -70,23 +61,23 @@ public class PlayerMovement : MonoBehaviour {
                         break;
                 }
 
-                StartCoroutine(Move(transform));
+				if (initialDir == currentDir.ToString ()) {
+					StartCoroutine (Move (transform));
+				} else {
+					initialDir = currentDir.ToString ();
+				}
             }
-
         }
-
 	}
 
-    public IEnumerator Move(Transform entity)
-    {
+    public IEnumerator Move(Transform entity) {
         isMoving = true;
         startPos = entity.position;
         t = 0;
 
         endPos = new Vector3(startPos.x + System.Math.Sign(input.x), startPos.y + System.Math.Sign(input.y), startPos.z);
 
-        while (t < 1f)
-        {
+        while (t < 1f) {
             t += Time.deltaTime * walkSpeed;
             entity.position = Vector3.Lerp(startPos, endPos, t);
             yield return null;
@@ -97,8 +88,7 @@ public class PlayerMovement : MonoBehaviour {
     }
 }
 
-enum Direction
-{
+enum Direction {
     North,
     East,
     South,

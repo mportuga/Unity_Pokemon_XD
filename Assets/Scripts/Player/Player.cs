@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class Player : MonoBehaviour {
 
     public List<OwnedPokemon> ownedPokemon = new List<OwnedPokemon>();
+	public string initialDir = Direction.South.ToString ();
 
 	void Start () {
 	
